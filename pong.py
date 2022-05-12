@@ -137,6 +137,7 @@ while not game_over:
             ball_movement[0]*=-1
             ball_position[0]+=7
         else:
+<<<<<<< Updated upstream
             ball_movement[1]*=-1
             if ball_movement[1]<0:
                 ball_position[1]-=5
@@ -156,6 +157,26 @@ while not game_over:
                 ball_position[1]+=5
                 
 
+=======
+            if ball_movement[1]>0:
+                ball_position[1]-=7
+            else:
+                ball_position[1]+=7
+            
+            ball_movement[1]*=-1
+
+    if ball_render.colliderect(player_2_render):
+        if ball_position[0]<750:
+            ball_movement[0]*=-1
+            ball_position[0]+=7
+        else:
+            if ball_movement[1]>0:
+                ball_position[1]-=7
+            else:
+                ball_position[1]+=7
+            
+            ball_movement[1]*=-1
+>>>>>>> Stashed changes
 
     
     pygame.display.flip()
