@@ -12,6 +12,8 @@ screen_size=(800,480)
 player_width=15
 player_height=90
 ball_color="orange"
+up=False
+down=True
 
 
 
@@ -53,25 +55,30 @@ while not game_over:
             #mandos jugador 1
             if event.key==  pygame.K_w and player_1[1]>0:
                 player_1_speed=-3
+        
             if event.key==  pygame.K_s and player_1[1]<390:
                 player_1_speed=3
+           
             #mandos jugador 2
             if event.key==  pygame.K_o:
                 player_2_speed=-3
             if event.key==  pygame.K_l:
                 player_2_speed= 3 
 
-        if event.type==pygame.KEYUP:
-            #mandos jugador 1
-            if event.key==  pygame.K_w:
-                player_1_speed=0
-            if event.key==  pygame.K_s:
-                player_1_speed=0
+    ##    if event.type==pygame.KEYUP:
+      ##      #mandos jugador 1
+        ##    if event.key==  pygame.K_w:
+        ##        player_1_speed=0
+
+   ##         if event.key==  pygame.K_s :
+     ##           player_1_speed=0
+                
+  
             #mandos jugador 2
-            if event.key==  pygame.K_o:
-                player_2_speed=0
-            if event.key==  pygame.K_l:
-                player_2_speed=0
+       ##     if event.key==  pygame.K_o:
+        ##        player_2_speed=0
+        ##    if event.key==  pygame.K_l:
+        ##        player_2_speed=0
 
     #generamos el movimiento 
 
@@ -137,7 +144,6 @@ while not game_over:
             ball_movement[0]*=-1
             ball_position[0]+=7
         else:
-<<<<<<< Updated upstream
             ball_movement[1]*=-1
             if ball_movement[1]<0:
                 ball_position[1]-=5
@@ -157,26 +163,6 @@ while not game_over:
                 ball_position[1]+=5
                 
 
-=======
-            if ball_movement[1]>0:
-                ball_position[1]-=7
-            else:
-                ball_position[1]+=7
-            
-            ball_movement[1]*=-1
-
-    if ball_render.colliderect(player_2_render):
-        if ball_position[0]<750:
-            ball_movement[0]*=-1
-            ball_position[0]+=7
-        else:
-            if ball_movement[1]>0:
-                ball_position[1]-=7
-            else:
-                ball_position[1]+=7
-            
-            ball_movement[1]*=-1
->>>>>>> Stashed changes
 
     
     pygame.display.flip()
