@@ -1,4 +1,5 @@
 
+from ast import If
 import pygame
 pygame.init()
 
@@ -38,7 +39,7 @@ player_2_speed=0
 
 #coordenadas pelota
 
-ball_position=[400,300]
+ball_position=[395,300]
 ball_movement=[3,3]
 
 game_over=False
@@ -50,9 +51,9 @@ while not game_over:
 
         if event.type==pygame.KEYDOWN:
             #mandos jugador 1
-            if event.key==  pygame.K_w:
+            if event.key==  pygame.K_w and player_1[1]>0:
                 player_1_speed=-3
-            if event.key==  pygame.K_s:
+            if event.key==  pygame.K_s and player_1[1]<390:
                 player_1_speed=3
             #mandos jugador 2
             if event.key==  pygame.K_o:
@@ -80,24 +81,12 @@ while not game_over:
 
     #jugadores
     
-
-
-    if player_1[1] > 0 and player_1[1] < 390:
+    
+    if (player_1[1]>0 and player_1_speed<0) or (player_1[1]<390 and player_1_speed>0):
         player_1[1] += player_1_speed
-    else:
-        if player_1[1] <= 0:
-          player_1[1]+=1
-        if player_1[1] >= 390:
-         player_1[1]-=1
-
-
-    if player_2[1] > 0 and player_2[1] < 390:
+    if (player_2[1]>0 and player_2_speed<0) or (player_2[1]<390 and player_2_speed>0):
         player_2[1] += player_2_speed
-    else:
-        if player_2[1] <= 0:
-          player_2[1]+=1
-        if player_2[1] >= 390:
-         player_2[1]-=1
+     
 
     #pelota
 
@@ -113,9 +102,6 @@ while not game_over:
 
     if ball_position[1] > 470 or ball_position[1] < 10 :
         ball_movement[1]*=-1
-
-    ball_position[0]+=ball_movement[0]
-    ball_position[1]+=ball_movement[1]
     
     #si la pelota sale de pantalla
 
@@ -123,6 +109,10 @@ while not game_over:
         ball_position=[400,240]
         ball_movement[0]*=-1
 
+    #por ultimo realizamos el movimiento
+
+    ball_position[0]+=ball_movement[0]
+    ball_position[1]+=ball_movement[1]
 
     #zona de logica ---------------------------------------------------------------------------
 
@@ -142,10 +132,32 @@ while not game_over:
 
     #colisiones
 
-    if ball_render.colliderect(player_1_render) or ball_render.colliderect(player_2_render):
-        ball_movement[0]*=-1
+    if ball_render.colliderect(player_1_render):
+        if ball_position[0]>70:
+            ball_movement[0]*=-1
+            ball_position[0]+=7
+        else:
+            ball_movement[1]*=-1
+            if ball_movement[1]<0:
+                ball_position[1]-=5
+            else:
+                ball_position[1]+=5
+    
+    
+    if ball_render.colliderect(player_2_render):
+        if ball_position[0]<756:
+            ball_movement[0]*=-1
+            ball_position[0]-=7
+        else:
+            ball_movement[1]*=-1
+            if ball_movement[1]<0:
+                ball_position[1]-=5
+            else:
+                ball_position[1]+=5
+                
 
 
+    
     pygame.display.flip()
     clock.tick(60)
 pygame.quit()
