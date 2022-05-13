@@ -1,6 +1,6 @@
 
 from ast import If
-import pygame
+import pygame,sys
 pygame.init()
 
 #colores 
@@ -14,6 +14,21 @@ player_height=90
 ball_color="orange"
 up=False
 down=True
+score_1=0
+
+font = pygame.font.SysFont(None,70)
+
+def Esribir(text,font,color,surface,x,y):
+    textobj=font.render(text,,1,color)
+    textrect=textobj.get_rect()
+    textrect.topleft=(x,y)
+    surface.blit(textobj,textrect)
+
+def Marcador():
+    
+
+        Esribir(str(score_1),font,white,screen,350,20)
+
 
 
 
@@ -26,7 +41,7 @@ clock = pygame.time.Clock()
 
 #x,y
 player_1=[50,195,player_width,player_height]
-player_1_speed=0
+player_1_speed=3
 
 
 
@@ -35,7 +50,7 @@ player_1_speed=0
 
 #x,y,ancho,alto
 player_2=[750,195,player_width,player_height,0]
-player_2_speed=0
+player_2_speed=3
 
 
 
@@ -47,54 +62,31 @@ ball_movement=[3,3]
 game_over=False
 
 while not game_over:
+     
     for event in pygame.event.get():
         if event.type==pygame.QUIT:
                 game_over=True
+##-------------------SALIDA-----------------##
 
-        if event.type==pygame.KEYDOWN:
-            #mandos jugador 1
-            if event.key==  pygame.K_w and player_1[1]>0:
-                player_1_speed=-3
-        
-            if event.key==  pygame.K_s and player_1[1]<390:
-                player_1_speed=3
-           
-            #mandos jugador 2
-            if event.key==  pygame.K_o:
-                player_2_speed=-3
-            if event.key==  pygame.K_l:
-                player_2_speed= 3 
+    # CAptura del teclado 
 
-    ##    if event.type==pygame.KEYUP:
-      ##      #mandos jugador 1
-        ##    if event.key==  pygame.K_w:
-        ##        player_1_speed=0
+    keys=pygame.key.get_pressed()
 
-   ##         if event.key==  pygame.K_s :
-     ##           player_1_speed=0
-                
-  
-            #mandos jugador 2
-       ##     if event.key==  pygame.K_o:
-        ##        player_2_speed=0
-        ##    if event.key==  pygame.K_l:
-        ##        player_2_speed=0
-
-    #generamos el movimiento 
 
 
     #Zona de logica -----------------------------------------------------------------------
 
+    #Movimiento del jugador 
 
-    #jugadores
-    
-    
-    if (player_1[1]>0 and player_1_speed<0) or (player_1[1]<390 and player_1_speed>0):
-        player_1[1] += player_1_speed
-    if (player_2[1]>0 and player_2_speed<0) or (player_2[1]<390 and player_2_speed>0):
-        player_2[1] += player_2_speed
-     
+    if keys[pygame.K_w] and player_1[1]>0:
+        player_1[1]-=player_1_speed
+    if keys[pygame.K_s]and player_1[1]<390:
+        player_1[1]+=player_1_speed
 
+    if keys[pygame.K_o] and player_2[1]>0:
+        player_2[1]-=player_1_speed
+    if keys[pygame.K_l]and player_2[1]<390:
+        player_2[1]+=player_2_speed
     #pelota
 
     #cambio de color
@@ -128,6 +120,9 @@ while not game_over:
     screen.blit(backGround,[-40,0])
     #zona de dibujo
 
+
+
+    
     player_1_render=pygame.draw.rect(screen,orange,(player_1[0],player_1[1],player_1[2],player_1[3]))
     player_2_render=pygame.draw.rect(screen,green,(player_2[0],player_2[1],player_2[2],player_2[3]))
     for y in range(5,595,5):
@@ -136,6 +131,7 @@ while not game_over:
 
     ball_render=pygame.draw.circle(screen,ball_color,ball_position,10)
 
+    Marcador()
 
     #colisiones
 
