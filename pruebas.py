@@ -171,7 +171,7 @@ down_limit=screen_size[1]
 player= Gameobject(inicial_X_player,inicial_Y_player)
 player2= Gameobject(screen_size[0]-inicial_X_player,inicial_Y_player)
 ball=Gameobject(inicial_X_ball,inicial_Y_ball)
-score=Scoreboard(2)
+score=Scoreboard(10)
 flick=Flicker(30,30)
 
 
@@ -218,7 +218,7 @@ while not game_finish:
 
 
 
-
+game_finish=False
 
 #///////////////////////////////////////////////////////////////////////Zona de Juego\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -281,7 +281,7 @@ while not game_finish:
 
     if ball.collider.colliderect(player.collider):
 
-        if ball.x>(player.x+player.width) and (ball.y>(player.y+ball.r) or ball.y<((player.y+player.height))):
+        if ball.x>(player.x+player.width) and (ball.y>(player.y) or ball.y<((player.y+player.height))):
             speed_ball[0]*=-1
             ball.x+=ball.r
         else:
@@ -294,7 +294,7 @@ while not game_finish:
 
     if ball.collider.colliderect(player2.collider):
         
-        if ball.x<(player2.x) and ball.y>(player2.y+ball.r) and ball.y<((player2.y+player2.height)):
+        if ball.x<(player2.x) and ball.y>(player2.y+ball.r) or ball.y<((player2.y+player2.height)):
             speed_ball[0]*=-1
             ball.x-=ball.r
         else:
