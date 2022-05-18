@@ -1,151 +1,11 @@
-from cgitb import reset
-from nbformat import write
 import pygame,sys
+from Utility import *
 pygame.init()
 
 #/\/\/\/\/\/\/\/\/\/\/\/\/\/\esenciales\/\/\/\/\/\/\/\/\/\/\/\/\/
-screen_size=(800,580)
-screen=pygame.display.set_mode(screen_size)
-scoreboard_size=100
 clock = pygame.time.Clock()
 game_finish=False
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\esenciales\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-
-#//////////////////////////Visuales\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-black=(0,0,0)
-white=(255,255,255)
-pink=(242, 39, 171)
-purple=(108,48,191)
-darkPurple=(39,25,89)
-yellow=(242, 208, 39)
-blue=(27,181,242)
-font=pygame.font.SysFont(None,70)
-font2=pygame.font.SysFont(None,70)
-
-
-
-#////////////////////Funciones\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-def DrawBox(color,x,y,width,height):
-
-    return pygame.draw.rect(screen,color,(x,y,width,height))
-    
-
-def DrawRound(r,color,x,y):
-    return pygame.draw.circle(screen,color,(x,y),r)
-    
-
-def Write(text,font,color,surface,x,y):
-    
-    textobj=font.render(text,True,color)
-    textrect=textobj.get_rect()
-    textrect.topleft=(x,y)
-    surface.blit(textobj,textrect)
-
-
-
-    
-
-
-    
-
-#/////////////////////////Clases\\\\\\\\\\\\\\\\\\\\\\\\
-class Gameobject():
-    
-    form=0
-    init_position=[0,0]
-    pygame=pygame
-    collider=0
-    width=0
-    height=0
-    x=0
-    y=0
-    r=0
-
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y 
-        self.init_position=[x,y]
-
-    def rest_position(self):
-        self.x=self.init_position[0]
-        self.y=self.init_position[1]
-    
-    def Box(self,width=50,height=50,color=white):
-        self.collider=DrawBox(color,self.x,self.y,width,height)
-
-    def round(self,r=50,color=white):
-        self.r=r
-        self.collider=DrawRound(self.r,color,self.x,self.y)
-
-
-
-class Scoreboard:
-
-
-    scr_1=0
-    scr_2=0
-    win=0
-    def __init__(self,winpoints):
-        self.win=winpoints
-        pass
-    
-
-
-    def point(self,jugador):
-        if jugador<(screen_size[0]/2):
-            self.scr_2+=1
-        else:
-            self.scr_1+=1
-
-    def draw(self,scoreboard_size):
-        DrawBox(purple,0,0,screen_size[0],scoreboard_size)
-        DrawBox(yellow,0,90,screen_size[0],10)
-        DrawBox(darkPurple,(screen_size[0]/2)-79,30,158,50)
-        DrawBox(purple,(screen_size[0]/2)-5,52.5,10,5)
-        text=str(self.scr_1)
-        text="{:0>2}".format(text)
-        Write(text,font,purple,screen,(screen_size[0]/2)-69,33)
-        text2=str(self.scr_2)
-        text2="{:0>2}".format(text2)
-        Write(text2,font,purple,screen,(screen_size[0]/2)+12,33)
-
-    def Winer(self):
-        if self.scr_1>=self.win or self.scr_2 >=self.win:
-            return True
-        else:
-            return False
-
-class Flicker:
-
-    on=0
-    off=0
-    reset=0
-    flick=0
-
-    def __init__(self,on,off):
-        self.on=on
-        self.off=off
-        self.reset=self.on+self.off
-
-    def Timmer(self):
-
-
-        self.flick+=1
-
-        if self.flick>=self.reset:
-            self.flick=0
-        elif self.flick<=self.on:
-            return True
-        elif self.flick>self.off:
-            return False
-        
-
-        
-
-
-
-#/////////////////////Variables\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 player_width=15
 player_height=90
@@ -153,6 +13,10 @@ ball_r_init=5
 speed_player=5
 speed_ball=[3,3]
 winner=0
+color_player_1=""
+color_player_2=""
+cursor_pos=[125,230]
+options_box_position=[100,150]
 
 
 inicial_Y_player=( (screen_size[1] + scoreboard_size )/ 2 ) - player_height/2
@@ -163,9 +27,6 @@ inicial_Y_ball=(screen_size[1]+scoreboard_size)/2
 
 up_limit=scoreboard_size
 down_limit=screen_size[1]
-
-
-
     
 #/////////////////////Objetos\\\\\\\\\\\\\\\\\\\\
 player= Gameobject(inicial_X_player,inicial_Y_player)
@@ -174,49 +35,38 @@ ball=Gameobject(inicial_X_ball,inicial_Y_ball)
 score=Scoreboard(10)
 flick=Flicker(30,30)
 
-
-
-
-
 #////////////////////////////////antes de jugar\\\\\\\\\\\\\\\\\\\\\
 
-
 while not game_finish:
-    for event in pygame.event.get():
+    events = pygame.event.get()
+    for event in events:
         if event.type==pygame.QUIT:
                 game_finish=True
 
+    color_player_1=white
+    color_player_2=purple
+    
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_d and cursor_pos[0]<=500:
+                cursor_pos[0]+=options_box_position[0]
+            if event.key == pygame.K_a and cursor_pos[0]>=200:
+                cursor_pos[0]-=options_box_position[0]
+
     screen.fill(darkPurple)
-
     Write("Pong Pygame ",font2,white,screen,220,30)
-    Write("Pong Pygame ",font2,white,screen,220,30)
+    if flick.Timmer():
+        Write("^",font2,white,screen,cursor_pos[0],cursor_pos[1])
+    else:
+        pass 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    for i in range(len(colores)-1):
+        i+=1
+        DrawBox(colores[i],i*options_box_position[0],options_box_position[1],80,80)
+    
     pygame.display.flip()
     
     clock.tick(80)
-
-
 
 game_finish=False
 
@@ -259,8 +109,6 @@ while not game_finish:
     ball.x+=speed_ball[0]
     ball.y+=speed_ball[1]
 
-
-
 #//////////////////////////////////////////////////////////////////zona de dibujo\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     
     #Background-----------------------------------------------------
@@ -273,8 +121,8 @@ while not game_finish:
 
     #sprites------------------------------------------------------
 
-    player.Box(player_width,player_height,pink)
-    player2.Box(player_width,player_height,blue)
+    player.Box(player_width,player_height,color_player_1)
+    player2.Box(player_width,player_height,color_player_2)
     ball.round(10,pink)
     
     #Colisiones----------------------------------------------------------
@@ -319,7 +167,6 @@ while not game_finish:
 game_finish=False
 
 #/////////////////////////////termino el juego\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
 
 while not game_finish:
     for event in pygame.event.get():
