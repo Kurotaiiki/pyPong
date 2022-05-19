@@ -1,6 +1,8 @@
 import pygame,sys
 pygame.init()
 
+logo=pygame.image.load("GGM.png")
+logo=pygame.transform.smoothscale(logo,(70.5,67.6))
 
 screen_size=(800,580)
 screen=pygame.display.set_mode(screen_size)
@@ -40,7 +42,6 @@ def Write(text,font,color,surface,x,y,size=0,bezel=(False,0)):
     textrect=textobj.get_rect()
     textrect.topleft=(x,y)
     surface.blit(textobj,textrect)  
-
 
 
 #/////////////////////////Clases\\\\\\\\\\\\\\\\\\\\\\\\
@@ -103,6 +104,7 @@ class Scoreboard:
         text2=str(self.scr_2)
         text2="{:0>2}".format(text2)
         Write(text2,font,purple,screen,(screen_size[0]/2)+12,33)
+        
 
     def Winer(self):
         if self.scr_1>=self.win or self.scr_2 >=self.win:

@@ -24,6 +24,7 @@ cursor_pos=[options_box_position[0]+25,options_box_position[1]+100]
 option=0
 choise_player=0
 player_color=[0,0]
+ball_color=""
 dificult={"1":3,"2":4,"3":6}
 
 
@@ -45,12 +46,15 @@ flick=Flicker(30,30)
 
 #////////////////////////////////escogiendo colors\\\\\\\\\\\\\\\\\\\\\
 
+
+
+
+
 while not game_finish:
     events = pygame.event.get()
     for event in events:
         if event.type==pygame.QUIT:
                 game_finish=True
-
 
     
     for event in events:
@@ -83,7 +87,9 @@ while not game_finish:
     for i in range(len(colors)):
         i
         DrawBox(colors[i],((i+1)*options_box_position[0]),options_box_position[1],80,80)
-    
+       
+    screen.blit(logo,(10,10))
+
     pygame.display.flip()
     
     clock.tick(80)
@@ -139,7 +145,8 @@ while not game_finish:
 
 
     
-    
+    screen.blit(logo,(10,10))
+
     pygame.display.flip()
     
     clock.tick(80)
@@ -180,7 +187,12 @@ while not game_finish:
         score.point(ball.x)
         ball.rest_position()
         speed_ball[0]*=-1
-        speed_ball[1]*=-1    
+        speed_ball[1]*=-1  
+    if speed_ball[0]>0:
+        ball_color=player_color[0]
+    else:
+        ball_color=player_color[1]
+        
 
     ball.x+=speed_ball[0]
     ball.y+=speed_ball[1]
@@ -197,7 +209,8 @@ while not game_finish:
 
     #sprites------------------------------------------------------
 
-    ball.round(10,pink)
+    ball.round(10,black)
+    ball.round(8,yellow)
     player.Box(player_width,player_height,player_color[0])
     player2.Box(player_width,player_height,player_color[1])
     
@@ -236,6 +249,9 @@ while not game_finish:
         
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\esenciales\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     
+    
+    screen.blit(logo,(10,10))
+
     pygame.display.flip()
     
     clock.tick(80)
@@ -269,6 +285,8 @@ while not game_finish:
     else:
         pass    
 
+    screen.blit(logo,(10,10))
+    
     pygame.display.flip()
     
     clock.tick(80)
