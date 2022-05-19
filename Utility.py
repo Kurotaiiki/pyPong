@@ -14,27 +14,34 @@ darkPurple=(39,25,89)
 yellow=(242, 208, 39)
 blue=(27,181,242)
 
-colores=[black,white,pink,purple,yellow,blue]
+colors=[black,white,pink,purple,yellow,blue]
 
 font=pygame.font.SysFont(None,70)
-font2=pygame.font.SysFont(None,70)
 
+
+#/////////////////////////// Funciones \\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 def DrawBox(color,x,y,width,height):
 
     return pygame.draw.rect(screen,color,(x,y,width,height))
     
 
-def DrawRound(r,color,x,y):
+def DrawRound(r,color,x,y): 
+    
     return pygame.draw.circle(screen,color,(x,y),r)
     
 
-def Write(text,font,color,surface,x,y):
-    
+def Write(text,font,color,surface,x,y,size=0,bezel=(False,0)):
+    if size!=0:
+        font=pygame.font.SysFont(None,size)
+    if bezel[0]:
+        Write(text,font,black,surface,x,y+bezel[1],size)
     textobj=font.render(text,True,color)
     textrect=textobj.get_rect()
     textrect.topleft=(x,y)
-    surface.blit(textobj,textrect)    
+    surface.blit(textobj,textrect)  
+
+
 
 #/////////////////////////Clases\\\\\\\\\\\\\\\\\\\\\\\\
 class Gameobject():
@@ -43,6 +50,7 @@ class Gameobject():
     init_position=[0,0]
     pygame=pygame
     collider=0
+    center=0
     width=0
     height=0
     x=0
@@ -60,10 +68,14 @@ class Gameobject():
     
     def Box(self,width=50,height=50,color=(0,0,0)):
         self.collider=DrawBox(color,self.x,self.y,width,height)
+        self.width=width
+        self.height=height
 
     def round(self,r=50,color=(0,0,0)):
         self.r=r
         self.collider=DrawRound(self.r,color,self.x,self.y)
+        self.center=self.collider.center
+        
 
 class Scoreboard:
 

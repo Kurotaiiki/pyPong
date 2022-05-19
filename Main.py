@@ -1,3 +1,4 @@
+
 import pygame,sys
 from Utility import *
 pygame.init()
@@ -7,16 +8,23 @@ clock = pygame.time.Clock()
 game_finish=False
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\esenciales\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
+
+
+
+
+
 player_width=15
 player_height=90
 ball_r_init=5
 speed_player=5
-speed_ball=[3,3]
+speed_ball=[2,2]
 winner=0
-color_player_1=""
-color_player_2=""
-cursor_pos=[125,230]
-options_box_position=[100,150]
+options_box_position=[100,300]
+cursor_pos=[options_box_position[0]+25,options_box_position[1]+100]
+option=0
+choise_player=0
+player_color=[0,0]
+dificult={"1":3,"2":4,"3":6}
 
 
 inicial_Y_player=( (screen_size[1] + scoreboard_size )/ 2 ) - player_height/2
@@ -35,7 +43,7 @@ ball=Gameobject(inicial_X_ball,inicial_Y_ball)
 score=Scoreboard(10)
 flick=Flicker(30,30)
 
-#////////////////////////////////antes de jugar\\\\\\\\\\\\\\\\\\\\\
+#////////////////////////////////escogiendo colors\\\\\\\\\\\\\\\\\\\\\
 
 while not game_finish:
     events = pygame.event.get()
@@ -43,26 +51,94 @@ while not game_finish:
         if event.type==pygame.QUIT:
                 game_finish=True
 
-    color_player_1=white
-    color_player_2=purple
+
     
     for event in events:
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_d and cursor_pos[0]<=500:
+            
+            if event.key == pygame.K_d and cursor_pos[0]<(options_box_position[0]+25)*5:
                 cursor_pos[0]+=options_box_position[0]
-            if event.key == pygame.K_a and cursor_pos[0]>=200:
+                option+=1
+            elif event.key == pygame.K_a and cursor_pos[0]>options_box_position[0]+25:
                 cursor_pos[0]-=options_box_position[0]
+                option-=1
+            elif event.key == pygame.K_SPACE:
+                player_color[choise_player]=colors[option]               
+                choise_player+=1
+    if choise_player==2:
+        game_finish=True
 
     screen.fill(darkPurple)
-    Write("Pong Pygame ",font2,white,screen,220,30)
+    Write("Pong Pygame",font,yellow,screen,170,40,100,(True,10))
     if flick.Timmer():
-        Write("^",font2,white,screen,cursor_pos[0],cursor_pos[1])
+        Write("^",font,colors[option],screen,cursor_pos[0],cursor_pos[1])
     else:
-        pass 
+        pass
+    if not game_finish:
+        Write("jugador_{}".format(choise_player+1),font,colors[option],screen,cursor_pos[0]-32,cursor_pos[1]+30,30)
+        Write("Jugador {} escoge tu color".format(choise_player+1),font,blue,screen,options_box_position[0]-10,options_box_position[1]-100,0,(True,5))
 
-    for i in range(len(colores)-1):
-        i+=1
-        DrawBox(colores[i],i*options_box_position[0],options_box_position[1],80,80)
+
+
+    for i in range(len(colors)):
+        i
+        DrawBox(colors[i],((i+1)*options_box_position[0]),options_box_position[1],80,80)
+    
+    pygame.display.flip()
+    
+    clock.tick(80)
+
+option=1
+game_finish=False
+options_box_position=[150,180]
+cursor_pos=[options_box_position[0]+25,options_box_position[1]+5]
+
+
+#////////////////////////////////escogiendo dificultad\\\\\\\\\\\\\\\\\\\\\
+
+while not game_finish:
+    events = pygame.event.get()
+    for event in events:
+        if event.type==pygame.QUIT:
+                game_finish=True
+
+
+    
+    for event in events:
+        if event.type == pygame.KEYDOWN:
+            
+            if event.key == pygame.K_w and cursor_pos[1]>options_box_position[1]+50:
+                cursor_pos[1]-=50
+                option-=1
+            elif event.key == pygame.K_s and cursor_pos[1]<options_box_position[1]+100:
+                cursor_pos[1]+=50
+                option+=1
+            elif event.key == pygame.K_SPACE:
+                game_finish=True
+                speed_ball[0]=dificult[str(option)]
+                speed_ball[1]=dificult[str(option)]
+                if option==3:
+                    speed_player+=4
+    
+    
+    screen.fill(darkPurple)
+    Write("Pong Pygame",font,yellow,screen,170,40,100,(True,10))
+
+    if flick.Timmer():
+        Write(">",font,white,screen,cursor_pos[0]+100,cursor_pos[1]+90)
+    else:
+        pass
+    
+    Write("Escoja La dificultad",font,blue,screen,options_box_position[0]-10,options_box_position[1],80,(True,8))
+    Write("Facil",font,white,screen,options_box_position[0]+160,options_box_position[1]+100)
+    Write("Normal",font,white,screen,options_box_position[0]+160,options_box_position[1]+150)
+    Write("Dificil",font,white,screen,options_box_position[0]+160,options_box_position[1]+200)
+
+
+
+
+
+    
     
     pygame.display.flip()
     
@@ -121,37 +197,39 @@ while not game_finish:
 
     #sprites------------------------------------------------------
 
-    player.Box(player_width,player_height,color_player_1)
-    player2.Box(player_width,player_height,color_player_2)
     ball.round(10,pink)
+    player.Box(player_width,player_height,player_color[0])
+    player2.Box(player_width,player_height,player_color[1])
+    
     
     #Colisiones----------------------------------------------------------
-
+    
     if ball.collider.colliderect(player.collider):
 
-        if ball.x>(player.x+player.width) and (ball.y>(player.y) or ball.y<((player.y+player.height))):
+        if ball.x>(player.x+player.width) and ball.y-ball.r>player.y and ball.y+ball.r<(player.y+player.height):
             speed_ball[0]*=-1
             ball.x+=ball.r
+            
         else:
-            if speed_ball[1]<0:
-                ball.y+=ball.r
-            if speed_ball[1]>0:
+            if speed_ball[1]>0 and ball.y<player.y:
+                speed_ball[1]*=-1   
                 ball.y-=ball.r
-            ball.x-=ball.r 
-            speed_ball[1]*=-1
+            elif speed_ball[1]<0 and ball.y>player.y+player.height:
+                speed_ball[1]*=-1   
+                ball.y+=ball.r
 
     if ball.collider.colliderect(player2.collider):
         
-        if ball.x<(player2.x) and ball.y>(player2.y+ball.r) or ball.y<((player2.y+player2.height)):
+        if ball.x<(player2.x) and ball.y-ball.r>player2.y and ball.y+ball.r<(player2.y+player2.height):
             speed_ball[0]*=-1
             ball.x-=ball.r
         else:
-            if speed_ball[1]<0:
-                ball.y+=(ball.r*speed_player)
-            if speed_ball[1]>0:
-                ball.y-=(ball.r*speed_player)
-            ball.x+=(ball.r*2)
-            speed_ball[1]*=-1   
+            if speed_ball[1]>0 and ball.y<player2.y:
+                speed_ball[1]*=-1   
+                ball.y-=ball.r
+            elif speed_ball[1]<0 and ball.y>player2.y+player.height:
+                speed_ball[1]*=-1   
+                ball.y+=ball.r
 
     if score.Winer():
         game_finish=True     
@@ -181,13 +259,13 @@ while not game_finish:
     score.draw(scoreboard_size)
 
     if score.scr_1>=score.win:
-        Write("Jugador 1 Gana",font2,white,screen,210,180)
+        Write("Jugador 1 Gana",font,white,screen,210,180)
     
     if score.scr_2>=score.win:
-        Write("Jugador 2 Gana",font2,white,screen,210,180)
+        Write("Jugador 2 Gana",font,white,screen,210,180)
 
     if flick.Timmer():
-        Write("Escape para salir",font2,white,screen,200,250)
+        Write("Escape para salir",font,white,screen,200,250)
     else:
         pass    
 
